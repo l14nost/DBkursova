@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Spring Security Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style th:replace="~{/admin.shared/style}"></style>
+
+<body>
+<div class="wrapper">
+  <div th:insert="admin.shared/header::header"></div>
+  <div th:insert="admin.shared/left_sidebar::left_sidebar"></div>
+
+  <div class="content-wrapper" style="padding-left: 50px">
+    <form class="needs-validation" method="post" enctype="multipart/form-data" th:action="@{/object_edit/{id}(id = ${objects.getIdObject()})}" >
+      <input type="hidden" name="idLcd" value="0">
+      <div style="display: flex; justify-content: space-between">
+        <h4 class="mb-3">Об'єкт</h4>
+      </div>
+      <div class="col-md-7 col-lg-8">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label for="firstName" class="form-label">Вулиця</label>
+            <input type="text" class="form-control" name="street" id="firstName"  th:value="${objects.getStreet()}" required="">
+          </div>
+          <div class="col-sm-6">
+            <label  class="form-label">Дата</label>
+            <input type="date" class="form-control" name="date"  th:value="${objects.getRepairDate()}" >
+          </div>
+          <div class="col-sm-6">
+            <label  class="form-label">Тип</label>
+            <input type="text" class="form-control" name="type"  th:value="${objects.getDamageType()}" >
+          </div>
+                    <div class="col-sm-6" th:if="${objects.getCrew()!=null}">
+                        <div class="form-floating">
+                            <select class="form-select"  aria-label="Floating label select example" name="idCrew">
+                                <option th:each="crew:${crews}" th:value="${crew.getIdCrew()}" th:text="${crew.getNumber()}" th:selected="${crew.getIdCrew() == objects.getCrew().getIdCrew()}"></option>
+                            </select>
+                            <label class="form-label">Бригада</label>
+                        </div>
+                    </div>
+            <div class="col-sm-6" th:if="${objects.getCrew() == null}">
+                <div class="form-floating">
+                    <select class="form-select"  aria-label="Floating label select example" name="idCrew">
+                        <option th:each="crew:${crews}" th:value="${crew.getIdCrew()}" th:text="${crew.getNumber()}"></option>
+                    </select>
+                    <label class="form-label">Бригада</label>
+                </div>
+            </div>
+          <label>Матеріали</label>
+          <div>
+            <table class="table table-striped" style="margin: 20px">
+              <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Назва</th>
+                <th scope="col">Кількість</th>
+                <th scope="col">
+                  <a th:href="@{/object_materials_add/{idObject}(idObject = ${objects.getIdObject()})}" class="btn btn-secondary btn-sm" style="margin-left: 10px">
+                    <i class="fas fa-plus">
+                    </i>
+                  </a>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="material:${materials}">
+                <th scope="row"><p th:text="${material.getMaterials().getIdMaterial()}"></p></th>
+                <th><p th:text="${material.getMaterials().getName()}"></p></th>
+                <td><p th:text="${material.getQuantity()}"></p></td>
+                <td>
+                  <div style="display: flex">
+                      <button type="button" class="btn btn-info btn-sm" th:attr="onclick='editMember('+${material.getIdObjectMaterials()}+')'">
+                        <i class="fas fa-pencil">
+                        </i>
+                      </button>
+                      <a th:href="@{/delete_object_material/{id}(id = ${material.getIdObjectMaterials()})}" class="btn btn-danger btn-sm" style="margin-left: 10px">
+                        <i class="fas fa-trash">
+                        </i>
+                      </a>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+<!--            <label>Бригады</label>-->
+<!--            <div>-->
+<!--                <table class="table table-striped" style="margin: 20px">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th scope="col">ID</th>-->
+<!--                        <th scope="col">Номер</th>-->
+<!--                        <th scope="col">Размер</th>-->
+<!--                        <th scope="col">-->
+<!--                            <a th:href="@{/add_crew_object/{idObject}(idObject = ${objects.getIdObject()})}" class="btn btn-secondary btn-sm" style="margin-left: 10px">-->
+<!--                                <i class="fas fa-plus">-->
+<!--                                </i>-->
+<!--                            </a>-->
+<!--                        </th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr th:each="crew:${objects.getCrew()}">-->
+<!--                        <th scope="row"><p th:text="${crew.getIdCrew()}"></p></th>-->
+<!--                        <th><p th:text="${crew.getNumber()}"></p></th>-->
+<!--                        <td><p th:text="${crew.getCrewMemberList().size()}"></p></td>-->
+<!--                        <td>-->
+<!--                            <div style="display: flex">-->
+<!--                                <form action="/delete_user"  method="post" >-->
+<!--                                    <input type="hidden" name="id" th:value="${crew.getIdCrew()}" />-->
+<!--                                    <button type="submit" class="btn btn-danger btn-sm" style="margin-left: 10px">-->
+<!--                                        <i class="fas fa-trash">-->
+<!--                                        </i>-->
+<!--                                    </button>-->
+<!--                                </form>-->
+<!--                            </div>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+            <label>Обладнання</label>
+            <div>
+                <table class="table table-striped" style="margin: 20px">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Назва</th>
+                        <th scope="col">Кількість</th>
+                        <th scope="col">
+                            <a th:href="@{/add_equipment_object/{idObject}(idObject = ${objects.getIdObject()})}" class="btn btn-secondary btn-sm" style="margin-left: 10px">
+                                <i class="fas fa-plus">
+                                </i>
+                            </a>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="equipment:${objects.getEquipment()}">
+                        <th scope="row"><p th:text="${equipment.getIdEquipment()}"></p></th>
+                        <th><p th:text="${equipment.getName()}"></p></th>
+                        <td><p th:text="${equipment.getType()}"></p></td>
+                        <td>
+                            <div style="display: flex">
+                                    <a th:href="@{/delete_object_equipment/{id}(id = ${objects.getEquipment().indexOf(equipment)+'_'+objects.getIdObject()})}" class="btn btn-danger btn-sm" style="margin-left: 10px">
+                                        <i class="fas fa-trash">
+                                        </i>
+                                    </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+          <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+
+        </div>
+      </div>
+<!--      </div>-->
+    </form>
+
+
+
+
+  </div>
+</div>
+
+</div>
+<div th:insert="admin.shared/footer::footer"></div>
+<div th:replace="~{/admin.shared/script}"></div>
+<script>
+
+function editMember(idMember) {
+
+  $.ajax({
+    url: "/object_materials_edit/" + idMember,
+    method: "GET",
+    success: function (response) {
+      window.location.href = "/object_materials_edit/" + idMember;
+    },
+    error: function (xhr, status, error) {
+      console.error('Произошла ошибка:', error);
+      alert('Произошла ошибка при выполнении запроса');
+    }
+  });
+}
+</script>
+</body>
+
+</html>

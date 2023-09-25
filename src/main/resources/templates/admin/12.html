@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Spring Security Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+  <style th:replace="~{/admin.shared/style}"></style></head>
+
+<body>
+<div class="wrapper">
+  <div th:replace="~{/admin.shared/header}"></div>
+  <div th:replace="~{/admin.shared/left_sidebar}"></div>
+  <div class="content-wrapper">
+    <div id="allUserContent">
+    <div style="text-align: center">
+      <h3>6.2) Які види обладнення використовуються у більшій кількості, ніж будь-яке інше обладнання?</h3>
+    </div>
+    </div>
+    <div>
+      <div id="tableClient">
+        <table class="table table-striped"  style="margin: 20px" id="userTable">
+          <thead>
+          <tr>
+            <th scope="col">IdEquipment</th>
+            <th scope="col">Кількість об'єктів</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="model:${models}">
+            <th scope="row"><p th:text="${model[0]}"></p></th>
+            <td><p th:text="${model[1]}"></p></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div th:replace="~{/admin.shared/footer}"></div>
+<div th:replace="~{/admin.shared/script}"></div>
+<div th:fragment="script"></div>
+<script>
+  function searchClient () {
+
+    var searchVal = document.getElementById('searchInputLcd').value;
+    var url = '/4';
+    $.ajax({
+      url: url + '?idCrew=' + searchVal,
+      type: 'GET',
+      success: function (data) {
+        var tableHtml = $(data).find('#tableClient').html();
+        $('#tableClient').html(tableHtml);
+      },
+      error: function (xhr, status, error) {
+        alert("-")
+        console.log(error);
+      }
+    });
+  }
+  function closeClient () {
+    var selectedSize = localStorage.getItem('selectedUserSize');
+    // e.preventDefault();
+    var searchVal = 'null';
+    var url = '/users';
+    if(selectedSize == null){
+      selectedSize = '3';
+    }
+    $.ajax({
+      url: url + '?searchClient=' + searchVal,
+      type: 'GET',
+      data: {
+        sizeUserPage: selectedSize,
+        // search: searchVal
+      },
+      success: function (data) {
+        var tableHtml = $(data).find('#tableClient').html();
+        $('#tableClient').html(tableHtml);
+
+        var pagination = $(data).find('#userPagination').html();
+        $('#userPagination').html(pagination);
+        var search = $(data).find('#clientSearch').html();
+        $('#clientSearch').html(search);
+        var next = $(data).find('#nextClient').html();
+        $('#nextClient').html(next);
+        var previous = $(data).find('#previousClient').html();
+        $('#previousClient').html(previous);
+        // $('#blackListTable').html(data);
+        localStorage.setItem('searchClient', searchVal);
+
+
+      },
+      error: function (xhr, status, error) {
+        alert("-")
+        console.log(error);
+      }
+    });
+  }
+  $(document).ready(function() {
+    var selectedSize = localStorage.getItem('selectedUserSize');
+    var page = localStorage.getItem('pageUser');
+
+    if (selectedSize) {
+      $('#sizeUserPage').val(selectedSize);
+    }
+    $('#previousClient').on('click','li',function(e) {
+      var searchBlack = localStorage.getItem('searchClient');
+      e.preventDefault();
+
+      var pageNumber = $('#pageNumberClientPr').val();
+
+      var url = '/users';
+
+      // pageNumber -= 1;
+      $.ajax({
+        url:url+'?page='+pageNumber,
+        type: 'GET',
+        data:{
+          sizeUserPage: selectedSize,
+          searchClient: searchBlack
+        },
+        success: function(data) {
+          var tableHtml = $(data).find('#userTable').html();
+          $('#userTable').html(tableHtml);
+          // var pagination = $(data).find('#paginationList').html();
+          // $('#paginationList').html(pagination);
+          var next = $(data).find('#nextClient').html();
+          $('#nextClient').html(next);
+          var previous = $(data).find('#previousClient').html();
+          $('#previousClient').html(previous);
+
+          $('#userPagination li').removeClass('active');
+          $('#userPagination li').eq(pageNumber).addClass('active');
+          localStorage.setItem('pageUser', pageNumber);
+
+
+        },
+        error: function(xhr, status, error) {
+          console.log(error);
+        }
+      });
+    });
+
+    $('#nextClient').on('click','li',function(e) {
+      var searchBlack = localStorage.getItem('searchClient');
+      e.preventDefault();
+      var pageNumber = $('#pageNumberClientNext').val();
+      var url = '/users';
+
+
+      $.ajax({
+        url:url+'?page='+pageNumber,
+        type: 'GET',
+        data:{
+          sizeUserPage: selectedSize,
+          searchClient: searchBlack
+        },
+        success: function(data) {
+          var tableHtml = $(data).find('#userTable').html();
+          $('#userTable').html(tableHtml);
+          // var pagination = $(data).find('#paginationList').html();
+          // $('#paginationList').html(pagination);
+          var next = $(data).find('#nextClient').html();
+          $('#nextClient').html(next);
+          var previous = $(data).find('#previousClient').html();
+          $('#previousClient').html(previous);
+
+          $('#userPagination li').removeClass('active');
+          $('#userPagination li').eq(pageNumber).addClass('active');
+          localStorage.setItem('pageUser', pageNumber);
+
+
+        },
+        error: function(xhr, status, error) {
+          console.log(error);
+        }
+      });
+    });
+
+    $('#sizeUserPage').on('change', function() {
+      var search = localStorage.getItem('searchClient');
+      selectedSize = $(this).val();
+      var url = '/users';
+
+      if (page == null) {
+        page = '0';
+      }
+
+      $.ajax({
+        url: url + '?sizeUserPage=' + selectedSize,
+        type: 'GET',
+        data: {
+          sizeUserPage: selectedSize,
+          page: page,
+          searchClient:search
+        },
+        contentType: "application/json"
+      })
+              .done(function(data) {
+                var size = $(data).find('#userTable').html();
+                $('#userTable').html(size);
+                var pagination = $(data).find('#userPagination').html();
+                $('#userPagination').html(pagination);
+                var next = $(data).find('#nextClient').html();
+                $('#nextClient').html(next);
+                var previous = $(data).find('#previousClient').html();
+                $('#previousClient').html(previous);
+                localStorage.setItem('selectedUserSize', selectedSize);
+              })
+              .fail(function() {
+                alert('Произошла ошибка при загрузке данных.');
+              });
+    });
+
+    $('#userPagination').on('click', 'li', function(e) {
+      var search = localStorage.getItem('searchClient');
+      e.preventDefault();
+      var pageNumber = $(this).text();
+      $('#userPagination li').removeClass('active');
+      $(this).addClass('active');
+      var url = '/users';
+
+      if (selectedSize == null) {
+        selectedSize = '3';
+      }
+
+      pageNumber -= 1;
+      $.ajax({
+        url: url + '?page=' + pageNumber,
+        type: 'GET',
+        data: {
+          sizeUserPage: selectedSize,
+          page: pageNumber,
+          searchClient:search
+        }
+      })
+      .done(function(data) {
+        var tableHtml = $(data).find('#userTable').html();
+        $('#userTable').html(tableHtml);
+        var next = $(data).find('#nextClient').html();
+        $('#nextClient').html(next);
+        var previous = $(data).find('#previousClient').html();
+        $('#previousClient').html(previous);
+        localStorage.setItem('pageUser', pageNumber);
+      })
+        .fail( function(xhr, status, error) {
+          console.log(error);
+        })
+      });
+    $(window).on('beforeunload', function() {
+      localStorage.removeItem('selectedUserSize');
+      localStorage.removeItem('pageUser');
+    });
+
+  });
+
+
+
+
+
+
+  function searchContractor () {
+    var selectedSize = localStorage.getItem('selectedContractorSize');
+    // e.preventDefault();
+    var searchVal = document.getElementById('searchInputContractor').value;
+    var url = '/users';
+    // if(selectedSize == null){
+    //   selectedSize = '3';
+    // }
+    $.ajax({
+      url: url + '?searchContractor=' + searchVal,
+      type: 'GET',
+      data: {
+        sizeContractorPage: selectedSize,
+        // search: searchVal
+      },
+      success: function (data) {
+        var tableHtml = $(data).find('#tableContractor').html();
+        $('#tableContractor').html(tableHtml);
+
+        var pagination = $(data).find('#contractorPagination').html();
+        $('#contractorPagination').html(pagination);
+        var next = $(data).find('#nextContractor').html();
+        $('#nextContractor').html(next);
+        var previous = $(data).find('#previousContractor').html();
+        $('#previousContractor').html(previous);
+        // $('#blackListTable').html(data);
+        localStorage.setItem('searchContractor', searchVal);
+
+
+      },
+      error: function (xhr, status, error) {
+        alert("-")
+        console.log(error);
+      }
+    });
+  }
+  function closeContractor () {
+    var selectedSize = localStorage.getItem('selectedContractorSize');
+    // e.preventDefault();
+    var searchVal = 'null';
+    var url = '/users';
+    if(selectedSize == null){
+      selectedSize = '3';
+    }
+    $.ajax({
+      url: url + '?searchContractor=' + searchVal,
+      type: 'GET',
+      data: {
+        sizeContractorPage: selectedSize,
+        // search: searchVal
+      },
+      success: function (data) {
+        var tableHtml = $(data).find('#tableContractor').html();
+        $('#tableContractor').html(tableHtml);
+
+        var pagination = $(data).find('#contractorPagination').html();
+        $('#contractorPagination').html(pagination);
+        var search = $(data).find('#contractorSearch').html();
+        $('#contractorSearch').html(search);
+        var next = $(data).find('#nextContractor').html();
+        $('#nextContractor').html(next);
+        var previous = $(data).find('#previousContractor').html();
+        $('#previousContractor').html(previous);
+        // $('#blackListTable').html(data);
+        localStorage.setItem('searchContractor', searchVal);
+
+
+      },
+      error: function (xhr, status, error) {
+        alert("-")
+        console.log(error);
+      }
+    });
+  }
+  $(document).ready(function() {
+    var selectedSize = localStorage.getItem('selectedContractorSize');
+    // var selectedSize = localStorage.getItem('selectedContractorSize');
+    var page = localStorage.getItem('pageContractor');
+
+    // if (selectedSize) {
+    //   $('#sizeContractorPage').val(selectedSize);
+    // }
+    $('#previousContractor').on('click','li',function(e) {
+      var searchBlack = localStorage.getItem('searchContractor');
+      e.preventDefault();
+
+      var pageNumber = $('#pageNumberContractorPr').val();
+
+      var url = '/users';
+
+      // pageNumber -= 1;
+      $.ajax({
+        url:url+'?pageContractor='+pageNumber,
+        type: 'GET',
+        data:{
+          sizeContractorPage: selectedSize,
+          searchContractor: searchBlack
+        },
+        success: function(data) {
+          var tableHtml = $(data).find('#contractorTable').html();
+          $('#contractorTable').html(tableHtml);
+          // var pagination = $(data).find('#paginationList').html();
+          // $('#paginationList').html(pagination);
+          var next = $(data).find('#nextContractor').html();
+          $('#nextContractor').html(next);
+          var previous = $(data).find('#previousContractor').html();
+          $('#previousContractor').html(previous);
+
+          $('#contractorPagination li').removeClass('active');
+          $('#contractorPagination li').eq(pageNumber).addClass('active');
+          localStorage.setItem('pageContractor', pageNumber);
+
+
+        },
+        error: function(xhr, status, error) {
+          console.log(error);
+        }
+      });
+    });
+
+    $('#nextContractor').on('click','li',function(e) {
+      var searchBlack = localStorage.getItem('searchContractor');
+      e.preventDefault();
+      var pageNumber = $('#pageNumberContractorNext').val();
+      var url = '/users';
+
+
+      $.ajax({
+        url:url+'?pageContractor='+pageNumber,
+        type: 'GET',
+        data:{
+          sizeContractorPage: selectedSize,
+          searchContractor: searchBlack
+        },
+        success: function(data) {
+          var tableHtml = $(data).find('#contractorTable').html();
+          $('#contractorTable').html(tableHtml);
+          // var pagination = $(data).find('#paginationList').html();
+          // $('#paginationList').html(pagination);
+          var next = $(data).find('#nextContractor').html();
+          $('#nextContractor').html(next);
+          var previous = $(data).find('#previousContractor').html();
+          $('#previousContractor').html(previous);
+
+          $('#contractorPagination li').removeClass('active');
+          $('#contractorPagination li').eq(pageNumber).addClass('active');
+          localStorage.setItem('pageContractor', pageNumber);
+
+
+        },
+        error: function(xhr, status, error) {
+          console.log(error);
+        }
+      });
+    });
+    $('#sizeContractorPage').on('change', function() {
+      var search = localStorage.getItem('searchContractor');
+      selectedSize = $(this).val();
+      var url = '/users';
+
+      if (page == null) {
+        page = '0';
+      }
+
+      $.ajax({
+        url: url + '?sizeContractorPage=' + selectedSize,
+        type: 'GET',
+        data: {
+          sizeContractorPage: selectedSize,
+          pageContractor: page,
+          searchContractor:search
+        },
+        contentType: "application/json"
+      })
+              .done(function(data) {
+                var size = $(data).find('#contractorTable').html();
+                $('#contractorTable').html(size);
+                var pagination = $(data).find('#contractorPagination').html();
+                $('#contractorPagination').html(pagination);
+                var next = $(data).find('#nextContractor').html();
+                $('#nextContractor').html(next);
+                var previous = $(data).find('#previousContractor').html();
+                $('#previousContractor').html(previous);
+                localStorage.setItem('selectedContractorSize', selectedSize);
+              })
+              .fail(function() {
+                alert('Произошла ошибка при загрузке данных.');
+              });
+    });
+
+    $('#contractorPagination').on('click', 'li', function(e) {
+      var selectedSize = localStorage.getItem('selectedContractorSize');
+      var search = localStorage.getItem('searchContractor');
+      e.preventDefault();
+      var pageNumber = $(this).text();
+      $('#contractorPagination li').removeClass('active');
+      $(this).addClass('active');
+      var url = '/users';
+
+      if (selectedSize == null) {
+        selectedSize = '3';
+      }
+
+      pageNumber -= 1;
+      $.ajax({
+        url: url + '?pageContractor=' + pageNumber,
+        type: 'GET',
+        data: {
+          sizeContractorPage: selectedSize,
+          pageContractor: pageNumber,
+          searchContractor:search
+        }
+      })
+              .done(function(data) {
+                var tableHtml = $(data).find('#contractorTable').html();
+                $('#contractorTable').html(tableHtml);
+                var next = $(data).find('#nextContractor').html();
+                $('#nextContractor').html(next);
+                var previous = $(data).find('#previousContractor').html();
+                $('#previousContractor').html(previous);
+                localStorage.setItem('pageContractor', pageNumber);
+              })
+              .fail( function(xhr, status, error) {
+                console.log(error);
+              })
+    });
+    $(window).on('beforeunload', function() {
+      localStorage.removeItem('selectedContractorSize');
+      localStorage.removeItem('pageContractor');
+    });
+
+  });
+
+
+
+
+
+
+
+
+
+  function searchNotary () {
+    var selectedSize = localStorage.getItem('selectedNotarySize');
+    // e.preventDefault();
+    var searchVal = document.getElementById('searchInputNotary').value;
+    var url = '/users';
+    // if(selectedSize == null){
+    //   selectedSize = '3';
+    // }
+    $.ajax({
+      url: url + '?searchNotary=' + searchVal,
+      type: 'GET',
+      data: {
+        sizeNotaryPage: selectedSize,
+        // search: searchVal
+      },
+      success: function (data) {
+        var tableHtml = $(data).find('#tableNotary').html();
+        $('#tableNotary').html(tableHtml);
+
+        var pagination = $(data).find('#notaryPagination').html();
+        $('#notaryPagination').html(pagination);
+        var next = $(data).find('#nextNotary').html();
+        $('#nextNotary').html(next);
+        var previous = $(data).find('#previousNotary').html();
+        $('#previousNotary').html(previous);
+        // $('#blackListTable').html(data);
+        localStorage.setItem('searchNotary', searchVal);
+
+
+      },
+      error: function (xhr, status, error) {
+        alert("-")
+        console.log(error);
+      }
+    });
+  }
+  function closeNotary () {
+    var selectedSize = localStorage.getItem('selectedNotarySize');
+    // e.preventDefault();
+    var searchVal = 'null';
+    var url = '/users';
+    if(selectedSize == null){
+      selectedSize = '3';
+    }
+    $.ajax({
+      url: url + '?searchNotary=' + searchVal,
+      type: 'GET',
+      data: {
+        sizeNotaryPage: selectedSize,
+        // search: searchVal
+      },
+      success: function (data) {
+        var tableHtml = $(data).find('#tableNotary').html();
+        $('#tableNotary').html(tableHtml);
+
+        var pagination = $(data).find('#notaryPagination').html();
+        $('#notaryPagination').html(pagination);
+        var search = $(data).find('#notarySearch').html();
+        $('#notarySearch').html(search);
+        var next = $(data).find('#nextNotary').html();
+        $('#nextNotary').html(next);
+        var previous = $(data).find('#previousNotary').html();
+        $('#previousNotary').html(previous);
+        // $('#blackListTable').html(data);
+        localStorage.setItem('searchNotary', searchVal);
+
+
+      },
+      error: function (xhr, status, error) {
+        alert("-")
+        console.log(error);
+      }
+    });
+  }
+  $(document).ready(function() {
+    var selectedSize = localStorage.getItem('selectedNotarySize');
+    var page = localStorage.getItem('pageNotary');
+
+    if (selectedSize) {
+      $('#sizeNotaryPage').val(selectedSize);
+    }
+    $('#previousNotary').on('click','li',function(e) {
+      var searchBlack = localStorage.getItem('searchNotary');
+      e.preventDefault();
+
+      var pageNumber = $('#pageNumberNotaryPr').val();
+
+      var url = '/users';
+
+      // pageNumber -= 1;
+      $.ajax({
+        url:url+'?pageNotary='+pageNumber,
+        type: 'GET',
+        data:{
+          sizeNotaryPage: selectedSize,
+          searchNotary: searchBlack
+        },
+        success: function(data) {
+          var tableHtml = $(data).find('#notaryTable').html();
+          $('#notaryTable').html(tableHtml);
+          // var pagination = $(data).find('#paginationList').html();
+          // $('#paginationList').html(pagination);
+          var next = $(data).find('#nextNotary').html();
+          $('#nextNotary').html(next);
+          var previous = $(data).find('#previousNotary').html();
+          $('#previousNotary').html(previous);
+
+          $('#notaryPagination li').removeClass('active');
+          $('#notaryPagination li').eq(pageNumber).addClass('active');
+          localStorage.setItem('pageNotary', pageNumber);
+
+
+        },
+        error: function(xhr, status, error) {
+          console.log(error);
+        }
+      });
+    });
+
+    $('#nextNotary').on('click','li',function(e) {
+      var searchBlack = localStorage.getItem('searchNotary');
+      e.preventDefault();
+      var pageNumber = $('#pageNumberNotaryNext').val();
+      var url = '/users';
+
+
+      $.ajax({
+        url:url+'?pageNotary='+pageNumber,
+        type: 'GET',
+        data:{
+          sizeNotaryPage: selectedSize,
+          searchNotary: searchBlack
+        },
+        success: function(data) {
+          var tableHtml = $(data).find('#notaryTable').html();
+          $('#notaryTable').html(tableHtml);
+          // var pagination = $(data).find('#paginationList').html();
+          // $('#paginationList').html(pagination);
+          var next = $(data).find('#nextNotary').html();
+          $('#nextNotary').html(next);
+          var previous = $(data).find('#previousNotary').html();
+          $('#previousNotary').html(previous);
+
+          $('#notaryPagination li').removeClass('active');
+          $('#notaryPagination li').eq(pageNumber).addClass('active');
+          localStorage.setItem('pageNotary', pageNumber);
+
+
+        },
+        error: function(xhr, status, error) {
+          console.log(error);
+        }
+      });
+    });
+    $('#sizeNotaryPage').on('change', function() {
+      var search = localStorage.getItem('searchNotary');
+      selectedSize = $(this).val();
+      var url = '/users';
+
+      if (page == null) {
+        page = '0';
+      }
+
+      $.ajax({
+        url: url + '?sizeNotaryPage=' + selectedSize,
+        type: 'GET',
+        data: {
+          sizeNotaryPage: selectedSize,
+          pageNotary: page,
+          searchNotary:search
+        },
+        contentType: "application/json"
+      })
+              .done(function(data) {
+                var size = $(data).find('#notaryTable').html();
+                $('#notaryTable').html(size);
+                var pagination = $(data).find('#notaryPagination').html();
+                $('#notaryPagination').html(pagination);
+                var next = $(data).find('#nextNotary').html();
+                $('#nextNotary').html(next);
+                var previous = $(data).find('#previousNotary').html();
+                $('#previousNotary').html(previous);
+                localStorage.setItem('selectedNotarySize', selectedSize);
+              })
+              .fail(function() {
+                alert('Произошла ошибка при загрузке данных.');
+              });
+    });
+
+    $('#notaryPagination').on('click', 'li', function(e) {
+      var search = localStorage.getItem('searchNotary');
+      e.preventDefault();
+      var pageNumber = $(this).text();
+      $('#notaryPagination li').removeClass('active');
+      $(this).addClass('active');
+      var url = '/users';
+
+      if (selectedSize == null) {
+        selectedSize = '3';
+      }
+
+      pageNumber -= 1;
+      $.ajax({
+        url: url + '?pageNotary=' + pageNumber,
+        type: 'GET',
+        data: {
+          sizeNotaryPage: selectedSize,
+          pageNotary: pageNumber,
+          searchNotary:search
+        }
+      })
+              .done(function(data) {
+                var tableHtml = $(data).find('#notaryTable').html();
+                $('#notaryTable').html(tableHtml);
+                var next = $(data).find('#nextNotary').html();
+                $('#nextNotary').html(next);
+                var previous = $(data).find('#previousNotary').html();
+                $('#previousNotary').html(previous);
+                localStorage.setItem('pageNotary', pageNumber);
+              })
+              .fail( function(xhr, status, error) {
+                console.log(error);
+              })
+    });
+    $(window).on('beforeunload', function() {
+      localStorage.removeItem('selectedNotarySize');
+      localStorage.removeItem('pageNotary');
+    });
+
+  });
+  $(window).on('beforeunload', function() {
+    localStorage.removeItem('searchClient');
+    localStorage.removeItem('searchContractor');
+    localStorage.removeItem('searchNotary');
+  });
+</script>
+</body>
+
+</html>

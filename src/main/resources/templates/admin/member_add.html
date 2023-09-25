@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Spring Security Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style th:replace="~{/admin.shared/style}"></style>
+
+<body>
+<div class="wrapper">
+  <div th:insert="admin.shared/header::header"></div>
+  <div th:insert="admin.shared/left_sidebar::left_sidebar"></div>
+
+  <div class="content-wrapper" style="padding-left: 50px">
+    <form class="needs-validation" method="post" enctype="multipart/form-data" th:action="@{/add_member/{idCrew}(idCrew = ${idCrew})}" >
+      <input type="hidden" name="idLcd" value="0">
+      <div style="display: flex; justify-content: space-between">
+        <h4 class="mb-3">Член брагиді</h4>
+      </div>
+      <div class="col-md-7 col-lg-8">
+        <div class="row g-3">
+          <div class="col-sm-12">
+            <label for="firstName" class="form-label">Ім'я</label>
+            <input type="text" class="form-control" name="name" id="firstName"   required="">
+          </div>
+          <div class="col-sm-6">
+            <label  class="form-label">Посада</label>
+            <input type="text" class="form-control" name="position"  >
+          </div>
+          <div class="col-sm-6">
+            <label  class="form-label">Зарплатня</label>
+            <input type="text" class="form-control" name="salary" >
+          </div>
+          <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+        </div>
+      </div>
+    </form>
+
+
+
+
+  </div>
+</div>
+
+</div>
+<div th:insert="admin.shared/footer::footer"></div>
+<div th:replace="~{/admin.shared/script}"></div>
+<script>
+</script>
+</body>
+
+</html>

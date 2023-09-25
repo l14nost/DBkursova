@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Security Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style th:replace="~{/admin.shared/style}"></style>
+
+<body>
+<div class="wrapper">
+    <div th:insert="admin.shared/header::header"></div>
+    <div th:insert="admin.shared/left_sidebar::left_sidebar"></div>
+
+    <div class="content-wrapper" style="padding-left: 50px">
+
+        <div style="display: flex; justify-content: center">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-gradient-info">
+                    <div class="inner">
+                        <h3 th:text="${objects.size()}"></h3>
+
+                        <p>Об'экти</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="/users" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-gradient-primary">
+                    <div class="inner">
+                        <h3 th:text="${crews.size()}"></h3>
+
+                        <p>Бригади</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="/users" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-gradient-green">
+                    <div class="inner">
+                        <h3 th:text="${members.size()}"></h3>
+
+                        <p>Члени бригад</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="/users" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-gradient-yellow">
+                    <div class="inner">
+                        <h3 th:text="${materials.size()}"></h3>
+
+                        <p>Матеріали</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="/users" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-gradient-danger">
+                    <div class="inner">
+                        <h3 th:text="${equipments.size()}"></h3>
+
+                        <p>Обладнення</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="/users" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+<div th:insert="admin.shared/footer::footer"></div>
+<div th:replace="~{/admin.shared/script}"></div>
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Spring Security Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style th:replace="~{/admin.shared/style}"></style>
+
+<body>
+<div class="wrapper">
+  <div th:insert="admin.shared/header::header"></div>
+  <div th:insert="admin.shared/left_sidebar::left_sidebar"></div>
+
+  <div class="content-wrapper" style="padding-left: 50px">
+    <form class="needs-validation" method="post" enctype="multipart/form-data" th:action="@{/crews_edit/{id}(id = ${crew.getIdCrew()})}" >
+      <input type="hidden" name="idLcd" value="0">
+      <div style="display: flex; justify-content: space-between">
+        <h4 class="mb-3">Брагиди</h4>
+      </div>
+      <div class="col-md-7 col-lg-8">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label for="firstName" class="form-label">Номер</label>
+            <input type="text" class="form-control" name="number" id="firstName" placeholder="Введите имя..." th:value="${crew.getNumber()}" required="">
+          </div>
+          <div class="col-sm-6">
+            <label  class="form-label">Час</label>
+            <input type="text" class="form-control" name="time"  th:value="${crew.getTimeSpent()}" placeholder="Введите имя..." >
+          </div>
+          <label>Члени бригад</label>
+          <div>
+            <table class="table table-striped" style="margin: 20px">
+              <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Ім'я</th>
+                <th scope="col">Посада</th>
+                <th scope="col">Зарплатня</th>
+                <th scope="col">
+                  <a th:href="@{/add_member/{idCrew}(idCrew = ${crew.getIdCrew()})}" class="btn btn-secondary btn-sm" style="margin-left: 10px">
+                    <i class="fas fa-plus">
+                    </i>
+                  </a>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="member:${crew.getCrewMemberList()}">
+                <th scope="row"><p th:text="${member.getIdCrewMember()}"></p></th>
+                <th><p th:text="${member.getName()}"></p></th>
+                <td><p th:text="${member.getPosition()}"></p></td>
+                <td><p th:text="${member.getSalary()}"></p></td>
+                <td>
+                  <div style="display: flex">
+                      <button type="button" class="btn btn-info btn-sm" th:attr="onclick='editMember('+${member.getIdCrewMember()}+')'">
+                        <i class="fas fa-pencil">
+                        </i>
+                      </button>
+                    <a th:href="@{/delete_member/{id}(id = ${member.getIdCrewMember()})}" class="btn btn-danger btn-sm" style="margin-left: 10px">
+                        <i class="fas fa-trash">
+                        </i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+<!--          <label>Новости</label>-->
+<!--          <div>-->
+<!--            <table class="table table-striped" style="margin: 20px">-->
+<!--              <thead>-->
+<!--              <tr>-->
+<!--                <th scope="col">Заголовок</th>-->
+<!--                <th scope="col">Дата</th>-->
+<!--                <th scope="col"><button type="submit" class="btn btn-secondary btn-sm" style="margin-left: 10px">-->
+<!--                  <i class="fas fa-plus">-->
+<!--                  </i>-->
+<!--                </button></th>-->
+<!--              </tr>-->
+<!--              </thead>-->
+<!--              <tbody>-->
+<!--              <tr th:each="news:${lcd.getNewsList()}">-->
+<!--                <th scope="row"><p th:text="${news.getTitle()}"></p></th>-->
+<!--                <td><p th:text="${news.getDate()}"></p></td>-->
+<!--                <td>-->
+<!--                  <div style="display: flex">-->
+<!--                    <form th:action="@{/apartment_edit/{id}(id=${news.getIdNews()})}"  method="get" >-->
+<!--                      <button type="submit" class="btn btn-info btn-sm">-->
+<!--                        <i class="fas fa-pencil">-->
+<!--                        </i>-->
+<!--                      </button>-->
+<!--                    </form>-->
+<!--                    <form action="/delete_user"  method="post" >-->
+<!--                      <input type="hidden" name="id" th:value="${news.getIdNews()}" />-->
+<!--                      <button type="submit" class="btn btn-danger btn-sm" style="margin-left: 10px">-->
+<!--                        <i class="fas fa-trash">-->
+<!--                        </i>-->
+<!--                      </button>-->
+
+<!--                    </form>-->
+<!--                  </div>-->
+<!--                </td>-->
+<!--              </tr>-->
+<!--              </tbody>-->
+<!--            </table>-->
+<!--          </div>-->
+          <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+
+        </div>
+      </div>
+<!--      </div>-->
+    </form>
+
+
+
+
+  </div>
+</div>
+
+</div>
+<div th:insert="admin.shared/footer::footer"></div>
+<div th:replace="~{/admin.shared/script}"></div>
+<script>
+// <!--  function addFrame() {-->
+// <!--    $.ajax({-->
+// <!--      url: "/add_member/" + [[${crew.getIdCrew}]],-->
+// <!--      method: "GET",-->
+// <!--      success: function (response) {-->
+// <!--        var galleryHtml = $(response).find('#frameDiv').html();-->
+// <!--        $('#frameDiv').html(galleryHtml);-->
+// <!--      },-->
+// <!--      error: function (xhr, status, error) {-->
+// <!--        console.error('Произошла ошибка:', error);-->
+// <!--        alert('Произошла ошибка при выполнении запроса');-->
+// <!--      }-->
+// <!--    });-->
+// <!--  }-->
+
+function editMember(idMember) {
+
+  $.ajax({
+    url: "/edit_member/" + idMember,
+    method: "GET",
+    success: function (response) {
+      window.location.href = "/edit_member/" + idMember;
+    },
+    error: function (xhr, status, error) {
+      console.error('Произошла ошибка:', error);
+      alert('Произошла ошибка при выполнении запроса');
+    }
+  });
+}
+</script>
+</body>
+
+</html>
