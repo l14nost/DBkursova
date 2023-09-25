@@ -1,6 +1,6 @@
 package com.example.DBkursova.config;
 
-import com.example.DBkursova.service.UserDetailsServiceImpl;
+import com.example.DBkursova.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserServiceImpl userServiceImpl;
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -51,7 +51,7 @@ public class SecurityConfig {
         return http.build();
     }
     public void configure (AuthenticationManagerBuilder builder) throws Exception{
-        builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
+        builder.userDetailsService(userServiceImpl).passwordEncoder(passwordEncoder());
     }
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

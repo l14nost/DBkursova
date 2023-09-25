@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ObjectMaterialsRepo extends JpaRepository<ObjectMaterials,Integer> {
+public interface ObjectMaterialsRepo extends JpaRepository<ObjectMaterials,Long> {
         @Query(value = "select * " +
             "from object_materials om " +
             "join materials m on om.materials_material_id = m.material_id " +

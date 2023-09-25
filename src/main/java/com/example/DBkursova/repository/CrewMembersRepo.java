@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Repository
-public interface CrewMembersRepo extends JpaRepository<CrewMember,Integer> {
+public interface CrewMembersRepo extends JpaRepository<CrewMember,Long> {
     @Query(value = "select * " +
             "from crewmembers " +
             "where crew_crew_id = :idCrew " +

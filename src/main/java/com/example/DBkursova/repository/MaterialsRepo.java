@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MaterialsRepo extends JpaRepository<Materials,Integer> {
+public interface MaterialsRepo extends JpaRepository<Materials,Long> {
     @Query(value = "SELECT * " +
             "FROM materials " +
             "WHERE material_name LIKE CONCAT('%', :name, '%')", nativeQuery = true)

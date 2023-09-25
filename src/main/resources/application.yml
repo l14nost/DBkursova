@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    url: 'jdbc:mysql://${MYSQL_HOST:localhost}:3306/road_service'
+    username: user
+    password: user
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+server:
+  port: 8084

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EquipmentRepo extends JpaRepository<Equipment,Integer> {
+public interface EquipmentRepo extends JpaRepository<Equipment,Long> {
     @Query(value = "SELECT * " +
             "FROM equipment " +
             "WHERE equipment_name LIKE CONCAT('%', :name, '%')", nativeQuery = true)

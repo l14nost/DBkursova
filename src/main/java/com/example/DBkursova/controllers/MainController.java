@@ -1,6 +1,7 @@
 package com.example.DBkursova.controllers;
 
 import com.example.DBkursova.service.*;
+import com.example.DBkursova.service.impl.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;

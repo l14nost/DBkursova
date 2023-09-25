@@ -1,10 +1,9 @@
 package com.example.DBkursova.controllers;
 
 import com.example.DBkursova.entity.*;
-import com.example.DBkursova.enums.TypeMaterials;
 import com.example.DBkursova.service.*;
+import com.example.DBkursova.service.impl.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,7 @@ public class ObjectController {
     private final ObjectMaterialsService objectMaterialsService;
     private final CrewService crewService;
     private final EquipmentService equipmentService;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserService userDetailsService;
 
     @GetMapping("/objects")
     public String crewMain(Model model){
@@ -34,16 +33,16 @@ public class ObjectController {
         return "admin/objects_main";
     }
     @GetMapping("/object_edit/{id}")
-    public String crewEditPage(@PathVariable int id,Model model){
+    public String crewEditPage(@PathVariable Long id,Model model){
         model.addAttribute("objects",roadObjectService.findById(id));
-        model.addAttribute("materials",objectMaterialsService.findAllMaterials(id));
+        model.addAttribute("materials",objectMaterialsService.findAllMaterials(Integer.parseInt(String.valueOf(id))));
         model.addAttribute("crews",crewService.findAll());
         log.info("Edit page object "+id+" by "+userDetailsService.getUserProfile());
         return "admin/object_edit";
     }
 
     @PostMapping("/object_edit/{id}")
-    public String crewUpdate(@PathVariable int id, @RequestParam String street , @RequestParam LocalDate date,@RequestParam int idCrew, @RequestParam String type, Model model){
+    public String crewUpdate(@PathVariable Long id, @RequestParam String street , @RequestParam LocalDate date,@RequestParam Long idCrew, @RequestParam String type, Model model){
         RoadObject roadObject = RoadObject.builder().damageType(type).street(street).repairDate(date).crew(Crew.builder().idCrew(idCrew).build()).build();
         roadObjectService.update(roadObject,id);
         log.info("Edit object "+id+" by "+userDetailsService.getUserProfile());
@@ -58,14 +57,14 @@ public class ObjectController {
         return "redirect:/objects";
     }
     @GetMapping("/add_equipment_object/{id}")
-    public String equipmentObjectAdd(@PathVariable int id,Model model){
+    public String equipmentObjectAdd(@PathVariable Integer id,Model model){
         model.addAttribute("object", id);
         model.addAttribute("equipments",equipmentService.findAll());
         log.info("Add page equipment_object by "+userDetailsService.getUserProfile());
         return "admin/object_equipment_add";
     }
     @PostMapping("/add_equipment_object/{id}")
-    public String equipmentObject(@PathVariable int id,@RequestParam int idEquipment,Model model){
+    public String equipmentObject(@PathVariable Long id,@RequestParam Long idEquipment,Model model){
         RoadObject roadObject = roadObjectService.findById(id);
         roadObject.getEquipment().add(Equipment.builder().idEquipment(idEquipment).build());
         roadObjectService.update(roadObject,id);
@@ -73,7 +72,7 @@ public class ObjectController {
         return "redirect:/object_edit/"+id;
     }
     @PostMapping("/delete_object/{id}")
-    public String deleteObject(@PathVariable int id){
+    public String deleteObject(@PathVariable Long id){
 
         roadObjectService.deleteRoadObject(id);
         log.info("Delete page object by "+userDetailsService.getUserProfile());
@@ -84,7 +83,7 @@ public class ObjectController {
     public String deleteObjectEquipment(@PathVariable String id){
         String[] string = id.split("_");
         int hash = Integer.parseInt(string[0]);
-        int idObject = Integer.parseInt(string[1]);
+        Long idObject = Long.parseLong(string[1]);
         roadObjectService.deleteRoadObjectEquipment(hash,idObject);
         log.info("Delete page equipment_object by "+userDetailsService.getUserProfile());
         return "redirect:/object_edit/"+idObject;

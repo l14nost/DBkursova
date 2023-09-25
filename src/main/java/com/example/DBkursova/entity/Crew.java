@@ -18,11 +18,11 @@ public class Crew {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "crew_id")
-    private int idCrew;
+    private Long idCrew;
     @Column(name = "crew_number")
-    private int number;
+    private Integer number;
     @Column(name = "crew_time_spent")
-    private int timeSpent;
+    private Integer timeSpent;
     @OneToMany(mappedBy = "crew", cascade = CascadeType.ALL)
     private List<CrewMember> crewMemberList = new ArrayList<>();
     @OneToMany(mappedBy = "crew")

@@ -20,12 +20,12 @@ public class Materials {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "material_id")
-    private int idMaterial;
+    private Long idMaterial;
     @Column(name = "material_name")
     private String name;
     @Column(name = "material_type")
     @Enumerated(EnumType.STRING)
     private TypeMaterials type;
     @Column(name = "material_quantity")
-    private int quantity;
+    private Integer quantity;
 }

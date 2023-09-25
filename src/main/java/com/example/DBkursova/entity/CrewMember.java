@@ -16,13 +16,13 @@ public class CrewMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    private int idCrewMember;
+    private Long idCrewMember;
     @Column(name = "member_name")
     private String name;
     @Column(name = "member_position")
     private String position;
     @Column(name = "member_salary")
-    private int salary;
+    private Integer salary;
     @Column(name = "member_description")
     private String description;
     @ManyToOne

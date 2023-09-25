@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CrewRepo extends JpaRepository<Crew,Integer> {
+public interface CrewRepo extends JpaRepository<Crew,Long> {
 
     @Query(value = "SELECT c.crew_id, COUNT(o.object_id) AS object_count " +
             "FROM Crew c " +

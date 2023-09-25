@@ -20,7 +20,7 @@ public class RoadObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "object_id")
-    private int idObject;
+    private Long idObject;
     @Column(name = "street")
     private String street;
     @Column(name = "repair_date")

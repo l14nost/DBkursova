@@ -1,6 +1,7 @@
 package com.example.DBkursova.controllers;
 
 import com.example.DBkursova.service.*;
+import com.example.DBkursova.service.impl.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,16 +23,16 @@ public class QueryController {
     private final CrewMemberService crewMemberService;
     private final MaterialsService materialsService;
     private final EquipmentService equipmentService;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserService userDetailsService;
 
     @GetMapping("/1")
-    public String query1(@RequestParam(required = false, defaultValue = "0")int idCrew, Model model){
+    public String query1(@RequestParam(required = false, defaultValue = "0")Integer idCrew, Model model){
         model.addAttribute("objects", roadObjectService.findAllCrew(idCrew));
         log.info("Query1 by "+userDetailsService.getUserProfile());
         return "admin/1";
     }
     @GetMapping("/2")
-    public String query2(@RequestParam(required = false, defaultValue = "0")int idCrew, Model model){
+    public String query2(@RequestParam(required = false, defaultValue = "0")Integer idCrew, Model model){
         model.addAttribute("objects", crewMemberService.query2(idCrew));
         log.info("Query2 by "+userDetailsService.getUserProfile());
         return "admin/2";
@@ -61,7 +61,7 @@ public class QueryController {
     }
 
     @GetMapping("/6")
-    public String query6(@RequestParam(required = false, defaultValue = "0") int param1,@RequestParam(required = false, defaultValue = "200") int param2, Model model){
+    public String query6(@RequestParam(required = false, defaultValue = "0") Integer param1,@RequestParam(required = false, defaultValue = "200") Integer param2, Model model){
         model.addAttribute("objects", materialsService.query6(param1,param2));
         log.info("Query6 by "+userDetailsService.getUserProfile());
 
@@ -78,7 +78,7 @@ public class QueryController {
     }
 
     @GetMapping("/8")
-    public String query8(@RequestParam(required = false, defaultValue = "1000000") int param, Model model){
+    public String query8(@RequestParam(required = false, defaultValue = "1000000") Integer param, Model model){
         model.addAttribute("objects", materialsService.query8(param));
         model.addAttribute("models", materialsService.findAll());
         log.info("Query8 by "+userDetailsService.getUserProfile());
@@ -126,7 +126,7 @@ public class QueryController {
     }
 
     @GetMapping("/14")
-    public String query14(@RequestParam(required = false, defaultValue = "0") int count, Model model){
+    public String query14(@RequestParam(required = false, defaultValue = "0") Integer count, Model model){
         model.addAttribute("objects", roadObjectService.query14(count));
         log.info("Query14 by "+userDetailsService.getUserProfile());
 
@@ -150,7 +150,7 @@ public class QueryController {
     }
 
     @GetMapping("/17")
-    public String query17(@RequestParam(required = false, defaultValue = "1") int param,Model model){
+    public String query17(@RequestParam(required = false, defaultValue = "1") Integer param,Model model){
         model.addAttribute("objects", materialsService.query17(param));
         log.info("Query17 by "+userDetailsService.getUserProfile());
 
@@ -158,7 +158,7 @@ public class QueryController {
     }
 
     @GetMapping("/18")
-    public String query18(@RequestParam(required = false, defaultValue = "1") int param,Model model){
+    public String query18(@RequestParam(required = false, defaultValue = "1") Integer param,Model model){
         model.addAttribute("objects", crewMemberService.query18(param));
         log.info("Query18 by "+userDetailsService.getUserProfile());
 

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepo extends JpaRepository<User, Integer> , JpaSpecificationExecutor<User> {
+public interface UserRepo extends JpaRepository<User, Long> , JpaSpecificationExecutor<User> {
     Optional<User> findByMail(String mail);
 
 }

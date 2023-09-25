@@ -17,32 +17,6 @@ import java.io.IOException;
 
 @Controller
 public class PdfController {
-
-//    @GetMapping("/print")
-//    public void printPdf(HttpServletResponse response) throws IOException {
-//        PDDocument document = new PDDocument();
-//        PDPage page = new PDPage(PDRectangle.A4);
-//        document.addPage(page);
-//
-//        // Получение HTML-страницы в виде строки
-//        String html = "<!DOCTYPE html>...</html>"; // Замените на вашу HTML-страницу
-//
-//        PDPageContentStream contentStream = new PDPageContentStream(document, page);
-//        contentStream.beginText();
-//        contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
-//        contentStream.newLineAtOffset(25, 700);
-//
-//        // Вывод HTML-страницы на PDF
-//        contentStream.showText(html);
-//        contentStream.endText();
-//        contentStream.close();
-//
-//        response.setContentType("application/pdf");
-//        response.setHeader("Content-Disposition", "attachment; filename=page.pdf");
-//
-//        document.save(response.getOutputStream());
-//        document.close();
-//    }
     @GetMapping("/print")
     public void printPdf(HttpServletResponse response) throws IOException {
         PDDocument document = new PDDocument();

@@ -2,7 +2,9 @@ package com.example.DBkursova.controllers;
 
 import com.example.DBkursova.entity.Equipment;
 import com.example.DBkursova.service.EquipmentService;
-import com.example.DBkursova.service.UserDetailsServiceImpl;
+import com.example.DBkursova.service.UserService;
+import com.example.DBkursova.service.impl.EquipmentServiceImpl;
+import com.example.DBkursova.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
 @Log4j2
 public class EquipmentController {
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserService userDetailsService;
     private final EquipmentService equipmentService;
     @GetMapping("/equipments")
     public String crewMain(Model model){
@@ -27,13 +29,13 @@ public class EquipmentController {
         return "admin/equipments_main";
     }
     @GetMapping("/equipments_edit/{id}")
-    public String crewEditPage(@PathVariable int id,Model model){
+    public String crewEditPage(@PathVariable Long id,Model model){
         model.addAttribute("equipment",equipmentService.findById(id));
         log.info("Edit page equipment "+id+" by "+userDetailsService.getUserProfile());
         return "admin/equipments_edit";
     }
     @PostMapping("/equipments_edit/{id}")
-    public String crewUpdate(@PathVariable int id, @RequestParam String name , @RequestParam String type, @RequestParam String condition,@RequestParam int cost, Model model){
+    public String crewUpdate(@PathVariable Long id, @RequestParam String name , @RequestParam String type, @RequestParam String condition,@RequestParam Integer cost, Model model){
         Equipment equipment = Equipment.builder().cost(cost).condition(condition).type(type).name(name).build();
         equipmentService.update(equipment,id);
         log.info("Edit equipment "+id+" by "+userDetailsService.getUserProfile());
@@ -45,7 +47,7 @@ public class EquipmentController {
         return "admin/equipments_add";
     }
     @PostMapping("/equipments_add")
-    public String crewAdd(@RequestParam String name , @RequestParam String type, @RequestParam String condition,@RequestParam int cost, Model model){
+    public String crewAdd(@RequestParam String name , @RequestParam String type, @RequestParam String condition,@RequestParam Integer cost, Model model){
         Equipment equipment = Equipment.builder().cost(cost).condition(condition).type(type).name(name).build();
         equipmentService.save(equipment);
         log.info("Add equipment by "+userDetailsService.getUserProfile());
@@ -53,7 +55,7 @@ public class EquipmentController {
     }
 
     @PostMapping("/delete_equipment/{id}")
-    public String deleteEquipment(@PathVariable int id){
+    public String deleteEquipment(@PathVariable Long id){
         equipmentService.deleteEquipment(id);
         return "redirect:/equipments";
     }

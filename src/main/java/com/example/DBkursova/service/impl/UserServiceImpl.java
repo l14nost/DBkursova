@@ -1,27 +1,22 @@
-package com.example.DBkursova.service;
+package com.example.DBkursova.service.impl;
 
 
 
 import com.example.DBkursova.entity.User;
 import com.example.DBkursova.repository.UserRepo;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import com.example.DBkursova.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Component
+@Service
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -36,6 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
     }
+    @Override
     public String getUserProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

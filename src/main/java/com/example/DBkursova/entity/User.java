@@ -21,7 +21,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "iduser")
-    private int idUser;
+    private Long idUser;
     private String password;
     private String mail;
     @Enumerated(EnumType.STRING)

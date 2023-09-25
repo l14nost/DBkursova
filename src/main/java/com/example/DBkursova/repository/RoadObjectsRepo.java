@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public interface RoadObjectsRepo extends JpaRepository<RoadObject,Integer> {
+public interface RoadObjectsRepo extends JpaRepository<RoadObject,Long> {
     @Query("SELECT ro FROM RoadObject ro")
     List<RoadObject> findAllQuery();
 

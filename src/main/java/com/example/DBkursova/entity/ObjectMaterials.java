@@ -17,7 +17,7 @@ public class ObjectMaterials {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_object_materials")
-    private int idObjectMaterials;
+    private Long idObjectMaterials;
 
     @ManyToOne
     private RoadObject object;
@@ -25,5 +25,5 @@ public class ObjectMaterials {
     @ManyToOne
     private Materials materials;
 
-    private int quantity;
+    private Integer quantity;
 }
